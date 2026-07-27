@@ -1,0 +1,2 @@
+com\inklusport\gateway\ApiGatewayApplication.class
+com\inklusport\gateway\controller\FallbackController.class

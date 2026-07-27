@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: ink-ms-gateway
+  
+  cloud:
+    gateway:
+      routes:
+        # 1. Auth MS
+        - id: auth-ms
+          uri: http://localhost:3001
+          predicates:
+            - Path=/api/auth/**
+        
+        # 2. Users MS (comas = OR)
+        - id: users-ms
+          uri: http://localhost:3002
+          predicates:
+            - Path=/api/users/**,/api/admin/**,/api/internal/**
+        
+        # 3. Sports MS
+        - id: sports-ms
+          uri: http://localhost:3003
+          predicates:
+            - Path=/api/sports/**,/api/events/**,/api/disabilities/**,/api/sport-disabilities/**,/api/registrations/**,/api/calendar/**,/api/scheduler/**,/api/attendance/**
+        
+        # 4. Accessibility MS 
+        - id: accessibility-ms
+          uri: http://localhost:3004
+          predicates:
+            - Path=/api/preferences/**,/api/notifications/**
+        
+        # 5. Reports MS
+        - id: reports-ms
+          uri: http://localhost:3006
+          predicates:
+            - Path=/api/analytics/**,/api/dashboard/**,/api/reports/**
+
+        # 6. AI Assistant MS (FastAPI)
+        - id: ai-ms
+          uri: http://localhost:3008
+          predicates:
+            - Path=/api/ai/**
+
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO

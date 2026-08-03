@@ -1,45 +1,74 @@
 spring:
   application:
     name: ink-ms-gateway
-  
+
   cloud:
     gateway:
+      httpclient:
+        connect-timeout: 10000
+        response-timeout: 180s
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns:
+              - "http://localhost:*"
+              - "http://127.0.0.1:*"
+              - "https://inklusport.inklusport.uk"
+              - "http://inklusport.inklusport.uk"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+              - OPTIONS
+            allowedHeaders: "*"
+            exposedHeaders:
+              - Authorization
+              - Content-Type
+            allowCredentials: true
+            maxAge: 3600
       routes:
-        # 1. Auth Service
         - id: auth-ms
-          uri: http://auth-service:3001
+          uri: ${AUTH_SERVICE_URL:http://auth-service:3001}
           predicates:
             - Path=/api/auth/**
 
-        # 2. Users Service (Path con comas = OR; líneas separadas = AND y rompe /api/admin)
+        - id: subscriptions-ms
+          uri: ${SUBSCRIPTIONS_SERVICE_URL:http://subscriptions-service:3005}
+          predicates:
+            - Path=/api/plans/**,/api/subscriptions/**,/api/payments/**,/api/event-payments/**,/api/financial-reports/**,/api/admin/plans/**,/api/admin/subscriptions/**,/api/internal/subscriptions/**
+
         - id: users-ms
-          uri: http://users-service:3002
+          uri: ${USERS_SERVICE_URL:http://users-service:3002}
           predicates:
             - Path=/api/users/**,/api/admin/**,/api/internal/**
 
-        # 3. Sports Service
         - id: sports-ms
-          uri: http://sports-service:3003
+          uri: ${SPORTS_SERVICE_URL:http://sports-service:3003}
           predicates:
-            - Path=/api/sports/**,/api/events/**,/api/disabilities/**,/api/sport-disabilities/**,/api/registrations/**,/api/calendar/**,/api/scheduler/**,/api/attendance/**
+            - Path=/api/sports/**,/api/events/**,/api/disabilities/**,/api/sport-disabilities/**,/api/registrations/**,/api/routines/**,/api/routine-registrations/**,/api/calendar/**,/api/scheduler/**,/api/attendance/**
 
-        # 4. Accessibility Service
         - id: accessibility-ms
-          uri: http://accessibility-service:3004
+          uri: ${ACCESSIBILITY_SERVICE_URL:http://accessibility-service:3004}
           predicates:
-            - Path=/api/preferences/**,/api/notifications/**
+            - Path=/api/preferences/**,/api/notifications/**,/api/voice/**
 
-        # 5. Reports Service
         - id: reports-ms
-          uri: http://reports-service:3006
+          uri: ${REPORTS_SERVICE_URL:http://reports-service:3006}
           predicates:
             - Path=/api/analytics/**,/api/dashboard/**,/api/reports/**
 
-        # 6. AI Assistant Service (FastAPI)
         - id: ai-ms
-          uri: http://ai-service:3008
+          uri: ${AI_SERVICE_URL:http://ai-service:3008}
           predicates:
             - Path=/api/ai/**
+          metadata:
+            connect-timeout: 10000
+            response-timeout: 180000
 
 server:
   port: 8080

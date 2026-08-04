@@ -30,27 +30,31 @@ Timeouts del gateway para IA: **180 s** (el LLM puede tardar).
 |--------|--------------|----|-------------|
 | GET | `/api/ai/health` | — | Estado + mapa RF |
 | GET | `/api/ai/diagnostico` | — | Ping auth/users/sports/a11y/reports |
-| POST | `/api/ai/chat/` | — | Chat del agente |
+| POST | `/api/ai/chat/` | — | Chat del agente (historial acotado) |
 | POST | `/api/ai/chat/stream` | — | Chat SSE |
-| POST | `/api/ai/rutinas/generar` | RF44 | Sesión adaptada (IA) |
-| POST | `/api/ai/ejercicios/adaptar` | RF42 | Adaptar ejercicio (+ `/rutinas/adaptar`) |
-| POST | `/api/ai/planes/generar` | RF44 | Plan multi-semana |
-| POST | `/api/ai/riesgo/lesiones/{userId}` | RF43 | Riesgo de lesión (+ `/riesgo/evaluar`) |
-| POST | `/api/ai/fatiga/rpe` | RF45 | Fatiga percibida (`detectar` omitido) |
-| POST | `/api/ai/voz/comando` | RF46 | Comando de voz |
-| GET | `/api/ai/dashboard/{userId}` | RF47 | Dashboard agregado |
-| GET | `/api/ai/progreso/comparativa/{userId}` | RF48 | Comparativa (+ `/historial/comparar`) |
-| GET | `/api/ai/recomendacion/eventos/{id}` | RF49 | Eventos |
-| GET | `/api/ai/deportes/filtrar/{id}` | RF50/51 | Deportes por perfil |
-| POST | `/api/ai/deteccion/discapacidad` | RF52 | Sugerir discapacidad |
-| POST | `/api/ai/competencia/modo/{userId}` | RF53 | Modo competencia (+ `/analizar`) |
-| POST | `/api/ai/alertas/{entrenadorId}` | RF55 | Alertas (+ `/alertas/entrenador`) |
+| GET | `/api/ai/chat/conversaciones` o `/sessions` | — | Listar hilos del usuario |
+| GET | `/api/ai/chat/conversaciones/{id}` o `/sessions/{id}` | — | Detalle + mensajes |
+| DELETE | `/api/ai/chat/conversaciones/{id}` o `/sessions/{id}` | — | Borrar hilo |
+| POST | `/api/ai/chat/nueva` o `POST .../sessions` | — | Id limpio para chat nuevo |
+| POST | `/api/ai/ejercicios/adaptar` | RF41 | Adaptar ejercicio |
+| POST | `/api/ai/riesgo/lesiones/{userId}` | RF42 | Riesgo de lesión |
+| POST | `/api/ai/rutinas/generar` | RF43 | Sesión adaptada (IA) |
+| POST | `/api/ai/planes/generar` | RF43 | Plan multi-semana |
+| POST | `/api/ai/fatiga/rpe` | RF44* | RPE manual (*fatiga sensores omitida) |
+| POST | `/api/ai/voz/comando` | RF45 | Comando de voz (opcional) |
+| GET | `/api/ai/dashboard/{userId}` | RF46 | Dashboard agregado |
+| GET | `/api/ai/progreso/comparativa/{userId}` | RF47 | Comparativa historial |
+| GET | `/api/ai/recomendacion/eventos/{id}` | RF48 | Eventos |
+| GET | `/api/ai/deportes/filtrar/{id}` | RF49/50 | Deportes por perfil |
+| POST | `/api/ai/deteccion/discapacidad` | RF51 | Sugerir discapacidad (texto) |
+| POST | `/api/ai/competencia/modo/{userId}` | RF52 | Modo competencia |
+| POST | `/api/ai/alertas/{entrenadorId}` | RF53 | Alertas entrenador |
 | POST | `/api/ai/quiz/...` | — | Quices organizador/entrenador |
 | POST | `/api/routines` | — | Entrenador crea rutina (sports) |
 | POST | `/api/routines/{id}/publish` | — | Publicar rutina (exige quiz ≥ 75) |
 | POST | `/api/routine-registrations` | — | Usuario se inscribe a rutina |
 
-Omitidos a propósito: **RF41** (visión artificial), **RF54** (wearables vendor), **RF45 detectar**.
+Omitido a propósito: **RF44 fatiga en tiempo real** (sensores/HR). El resto de RFs del mapa actual están cubiertos o son opcionales (voz).
 
 ### Ejemplo Postman (público)
 

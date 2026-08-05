@@ -77,6 +77,10 @@ Health rápido:
 GET https://inklusport.inklusport.uk/api/ai/health
 ```
 
+La app web se abre en `https://inklusport.inklusport.uk/` (nginx del
+frontend proxea `/api` al gateway). El hostname del túnel Cloudflare debe
+apuntar a `http://frontend-service:80`.
+
 ## CORS
 
 Orígenes permitidos: `localhost` / `127.0.0.1` (cualquier puerto),

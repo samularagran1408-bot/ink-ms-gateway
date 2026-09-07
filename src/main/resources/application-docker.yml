@@ -55,15 +55,24 @@ spring:
           predicates:
             - Path=/api/sports/**,/api/events/**,/api/disabilities/**,/api/sport-disabilities/**,/api/registrations/**,/api/routines/**,/api/routine-registrations/**,/api/calendar/**,/api/scheduler/**,/api/attendance/**
 
-        - id: accessibility-ms
-          uri: ${ACCESSIBILITY_SERVICE_URL:http://accessibility-service:3004}
-          predicates:
-            - Path=/api/preferences/**,/api/notifications/**,/api/voice/**
-
         - id: reports-ms
           uri: ${REPORTS_SERVICE_URL:http://reports-service:3006}
           predicates:
             - Path=/api/analytics/**,/api/dashboard/**,/api/reports/**
+
+        - id: accessibility-notifications-stream
+          uri: ${ACCESSIBILITY_SERVICE_URL:http://accessibility-service:3004}
+          predicates:
+            - Path=/api/notifications/stream
+          metadata:
+            connect-timeout: 10000
+            response-timeout: 3600000
+          order: -1
+
+        - id: accessibility-ms
+          uri: ${ACCESSIBILITY_SERVICE_URL:http://accessibility-service:3004}
+          predicates:
+            - Path=/api/preferences/**,/api/notifications/**,/api/voice/**
 
         - id: ai-ms
           uri: ${AI_SERVICE_URL:http://ai-service:3008}

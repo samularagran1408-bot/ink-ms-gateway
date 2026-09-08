@@ -62,15 +62,6 @@ spring:
           predicates:
             - Path=/api/analytics/**,/api/dashboard/**,/api/reports/**
 
-        - id: accessibility-notifications-stream
-          uri: http://localhost:3004
-          predicates:
-            - Path=/api/notifications/stream
-          metadata:
-            connect-timeout: 10000
-            response-timeout: 3600000
-          order: -1
-
         - id: accessibility-ms
           uri: http://localhost:3004
           predicates:

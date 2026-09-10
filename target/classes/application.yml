@@ -1,45 +1,80 @@
 spring:
   application:
     name: ink-ms-gateway
-  
+
+  codec:
+    max-in-memory-size: 4MB
+
   cloud:
     gateway:
+      # Timeouts holgados: el asistente de IA puede tardar (LLM hasta ~120s).
+      httpclient:
+        connect-timeout: 10000
+        response-timeout: 180s
+      # Evita headers CORS duplicados si algún microservicio también los añade.
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns:
+              - "http://localhost:*"
+              - "http://127.0.0.1:*"
+              - "https://inklusport.inklusport.uk"
+              - "http://inklusport.inklusport.uk"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+              - OPTIONS
+            allowedHeaders: "*"
+            exposedHeaders:
+              - Authorization
+              - Content-Type
+            allowCredentials: true
+            maxAge: 3600
       routes:
-        # 1. Auth MS
         - id: auth-ms
           uri: http://localhost:3001
           predicates:
             - Path=/api/auth/**
-        
-        # 2. Users MS (comas = OR)
+
+        - id: subscriptions-ms
+          uri: http://localhost:3005
+          predicates:
+            - Path=/api/plans/**,/api/subscriptions/**,/api/payments/**,/api/event-payments/**,/api/financial-reports/**,/api/admin/plans/**,/api/admin/subscriptions/**,/api/internal/subscriptions/**
+
         - id: users-ms
           uri: http://localhost:3002
           predicates:
             - Path=/api/users/**,/api/admin/**,/api/internal/**
-        
-        # 3. Sports MS
+
         - id: sports-ms
           uri: http://localhost:3003
           predicates:
-            - Path=/api/sports/**,/api/events/**,/api/disabilities/**,/api/sport-disabilities/**,/api/registrations/**,/api/calendar/**,/api/scheduler/**,/api/attendance/**
-        
-        # 4. Accessibility MS 
-        - id: accessibility-ms
-          uri: http://localhost:3004
-          predicates:
-            - Path=/api/preferences/**,/api/notifications/**
-        
-        # 5. Reports MS
+            - Path=/api/sports/**,/api/events/**,/api/disabilities/**,/api/sport-disabilities/**,/api/registrations/**,/api/routines/**,/api/routine-registrations/**,/api/calendar/**,/api/scheduler/**,/api/attendance/**
+
         - id: reports-ms
           uri: http://localhost:3006
           predicates:
             - Path=/api/analytics/**,/api/dashboard/**,/api/reports/**
 
-        # 6. AI Assistant MS (FastAPI)
+        - id: accessibility-ms
+          uri: http://localhost:3004
+          predicates:
+            - Path=/api/preferences/**,/api/notifications/**,/api/voice/**
+
+        # Asistente IA (FastAPI). Sin StripPrefix: el path llega igual.
         - id: ai-ms
           uri: http://localhost:3008
           predicates:
             - Path=/api/ai/**
+          metadata:
+            connect-timeout: 10000
+            response-timeout: 180000
 
 eureka:
   client:

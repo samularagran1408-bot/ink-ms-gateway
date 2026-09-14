@@ -43,7 +43,12 @@ spring:
         - id: subscriptions-ms
           uri: ${SUBSCRIPTIONS_SERVICE_URL:http://subscriptions-service:3005}
           predicates:
-            - Path=/api/plans/**,/api/subscriptions/**,/api/payments/**,/api/event-payments/**,/api/financial-reports/**,/api/admin/plans/**,/api/admin/subscriptions/**,/api/internal/subscriptions/**
+            - Path=/api/planes/**,/api/suscripciones/**,/api/pagos/**,/api/eventos-pago/**,/api/reportes/financiero/**,/api/reportes/admin/**,/api/internal/suscripciones/**,/api/plans/**,/api/subscriptions/**,/api/payments/**,/api/event-payments/**,/api/financial-reports/**,/api/admin/plans/**,/api/admin/subscriptions/**,/api/internal/subscriptions/**
+
+        - id: sports-internal
+          uri: ${SPORTS_SERVICE_URL:http://sports-service:3003}
+          predicates:
+            - Path=/api/internal/registrations/**
 
         - id: users-ms
           uri: ${USERS_SERVICE_URL:http://users-service:3002}

@@ -45,7 +45,13 @@ spring:
         - id: subscriptions-ms
           uri: http://localhost:3005
           predicates:
-            - Path=/api/plans/**,/api/subscriptions/**,/api/payments/**,/api/event-payments/**,/api/financial-reports/**,/api/admin/plans/**,/api/admin/subscriptions/**,/api/internal/subscriptions/**
+            - Path=/api/planes/**,/api/suscripciones/**,/api/pagos/**,/api/eventos-pago/**,/api/reportes/financiero/**,/api/reportes/admin/**,/api/internal/suscripciones/**,/api/plans/**,/api/subscriptions/**,/api/payments/**,/api/event-payments/**,/api/financial-reports/**,/api/admin/plans/**,/api/admin/subscriptions/**,/api/internal/subscriptions/**
+
+        # Antes de users-ms: /api/internal/** de users no debe tragar este path.
+        - id: sports-internal
+          uri: http://localhost:3003
+          predicates:
+            - Path=/api/internal/registrations/**
 
         - id: users-ms
           uri: http://localhost:3002
